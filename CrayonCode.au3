@@ -1,3 +1,12 @@
+#cs ----------------------------------------------------------------------------
+
+	AutoIt Version: 3.3.14.2
+	Author:         CrayonCode
+	Version:		 Alpha 0.15
+	Contact:		 http://www.elitepvpers.com/forum/black-desert/4268940-autoit-crayoncode-bot-project-opensource-free.html
+
+#ce ----------------------------------------------------------------------------
+
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Compile_Both=y  ;required for ImageSearch.au3
 #AutoIt3Wrapper_UseX64=y  ;required for ImageSearch.au3
@@ -15,106 +24,159 @@
 #include <TabConstants.au3>
 #include <WindowsConstants.au3>
 #include <ListViewConstants.au3>
+#include <GuiListView.au3>
 
-#Region ### START Koda GUI section ### Form=c:\program files (x86)\autoit3\scite\koda\forms\newfish1.kxf
-$CrayonCode = GUICreate("CrayonCode", 401, 401, 190, 321, -1, BitOR($WS_EX_TOPMOST, $WS_EX_WINDOWEDGE))
+#Region ### START Koda GUI section ### Form=c:\program files (x86)\autoit3\scite\koda\forms\newfish2.kxf
+$CrayonCode = GUICreate("CrayonCode", 401, 401, 316, 174, -1, BitOR($WS_EX_TOPMOST,$WS_EX_WINDOWEDGE))
+GUISetBkColor(0xFFFFFF)
 $Tab = GUICtrlCreateTab(0, 0, 400, 400)
 $Tab_Main = GUICtrlCreateTabItem("Main")
-$Group4 = GUICtrlCreateGroup("Stats", 32, 96, 329, 281)
-$Label7 = GUICtrlCreateLabel("Status:", 48, 128, 37, 17)
-$Edit1 = GUICtrlCreateEdit("", 112, 128, 233, 17, BitOR($ES_CENTER, $ES_NOHIDESEL, $ES_READONLY))
-$Label6 = GUICtrlCreateLabel("Inventory:", 48, 176, 51, 17)
-$Edit2 = GUICtrlCreateEdit("", 112, 176, 137, 17, BitOR($ES_CENTER, $ES_NOHIDESEL, $ES_READONLY))
+$Group4 = GUICtrlCreateGroup("Stats", 32, 72, 329, 313)
+$Label7 = GUICtrlCreateLabel("Status:", 48, 104, 37, 17)
+$E_Status = GUICtrlCreateEdit("", 112, 104, 233, 17, BitOR($ES_CENTER,$ES_NOHIDESEL,$ES_READONLY))
+$Label6 = GUICtrlCreateLabel("Inventory:", 48, 152, 51, 17)
+$E_Inventory = GUICtrlCreateEdit("", 112, 152, 137, 17, BitOR($ES_CENTER,$ES_NOHIDESEL,$ES_READONLY))
 GUICtrlSetTip(-1, "Number of looted items / Avaible Inventory Slots ( Reserved Slots). Stops fishing when limit is reached.")
-$ButtonClear = GUICtrlCreateButton("Clear [F5]", 264, 168, 75, 33)
+$ButtonClear = GUICtrlCreateButton("Clear [F5]", 264, 144, 75, 33)
 GUICtrlSetTip(-1, "Sets looted items to back zero.")
-$ListView1 = GUICtrlCreateListView("Type|Session|Total", 48, 208, 298, 158, BitOR($GUI_SS_DEFAULT_LISTVIEW, $WS_VSCROLL), $LVS_EX_FULLROWSELECT)
+$ListView1 = GUICtrlCreateListView("Type|Session|Total", 48, 184, 298, 198, BitOR($LVS_REPORT,$LVS_SHOWSELALWAYS,$WS_VSCROLL), $LVS_EX_FULLROWSELECT)
 GUICtrlSendMsg(-1, $LVM_SETCOLUMNWIDTH, 0, 100)
 GUICtrlSendMsg(-1, $LVM_SETCOLUMNWIDTH, 1, 90)
 GUICtrlSendMsg(-1, $LVM_SETCOLUMNWIDTH, 2, 100)
-$ListView1_0 = GUICtrlCreateListViewItem("White", $ListView1)
-$ListView1_1 = GUICtrlCreateListViewItem("Green", $ListView1)
-$ListView1_2 = GUICtrlCreateListViewItem("Blue", $ListView1)
-$ListView1_3 = GUICtrlCreateListViewItem("Gold", $ListView1)
-$ListView1_4 = GUICtrlCreateListViewItem("Silver Key", $ListView1)
-$ListView1_5 = GUICtrlCreateListViewItem("Ancient Relic", $ListView1)
-$ListView1_6 = GUICtrlCreateListViewItem("Coelacanth", $ListView1)
 GUICtrlCreateGroup("", -99, -99, 1, 1)
-$Button1 = GUICtrlCreateButton("Start/Stop [F4]", 64, 40, 115, 49)
+$BStart = GUICtrlCreateButton("Start/Stop [F4]", 80, 32, 115, 33)
 GUICtrlSetTip(-1, "Starts/Stops fishing. Shortcut is F4.")
-$Button2 = GUICtrlCreateButton("Reset Session [F8]", 208, 40, 115, 49)
+$BReset = GUICtrlCreateButton("Reset Session [F8]", 208, 32, 115, 33)
 GUICtrlSetTip(-1, "Sets Inventory and Session stats back to zero. Shortcut is F8.")
 $Tab_Settings = GUICtrlCreateTabItem("Settings")
-$Loot_Settings = GUICtrlCreateGroup("Loot Settings", 16, 56, 177, 217)
-$LSpecial = GUICtrlCreateLabel("Special Items:", 36, 151, 70, 17)
-$LRarity = GUICtrlCreateLabel("Minimum Rarity:", 36, 87, 78, 17)
-$CRarity = GUICtrlCreateCombo("", 44, 111, 82, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+$Loot_Settings = GUICtrlCreateGroup("Loot Settings", 8, 40, 121, 169)
+$LRarity = GUICtrlCreateLabel("Minimum Rarity:", 20, 63, 78, 17)
+$CRarity = GUICtrlCreateCombo("", 28, 87, 82, 25, BitOR($CBS_DROPDOWNLIST,$CBS_AUTOHSCROLL))
 GUICtrlSetData(-1, "Gold|Blue|Green|White|Specials Only", "Blue")
-$CBSpecial1 = GUICtrlCreateCheckbox("Silver Key", 44, 175, 97, 17)
+GUICtrlSetTip(-1, "Pick up items that are equal or higher Rarity.")
+$CBSpecial1 = GUICtrlCreateCheckbox("Loot Silver Key", 20, 119, 97, 17)
 GUICtrlSetState(-1, $GUI_CHECKED)
-$CBSpecial2 = GUICtrlCreateCheckbox("Ancient Relic", 44, 207, 97, 17)
+GUICtrlSetTip(-1, "Pick up Silverkey. (Ignores Minimum Rarity)")
+$CBSpecial2 = GUICtrlCreateCheckbox("Loot Ancient Relic", 20, 135, 105, 17)
 GUICtrlSetState(-1, $GUI_CHECKED)
-$CBSpecial3 = GUICtrlCreateCheckbox("Coelacanth", 44, 239, 97, 17)
+GUICtrlSetTip(-1, "Pick up Ancient Relics. (Ignores Minimum Rarity)")
+$CBSpecial3 = GUICtrlCreateCheckbox("Loot Coelacanth", 20, 151, 97, 17)
 GUICtrlSetState(-1, $GUI_CHECKED)
+GUICtrlSetTip(-1, "Pick up Coealacanth. (Ignores Minimum Rarity)")
+$CBEvent = GUICtrlCreateCheckbox("Loot Event items", 20, 168, 97, 17)
+GUICtrlSetState(-1, $GUI_CHECKED)
+GUICtrlSetTip(-1, "Pick up event items. (Ignores Minimum Rarity)")
+$CBTrash = GUICtrlCreateCheckbox("Loot Trash", 20, 184, 97, 17)
+GUICtrlSetTip(-1, "Do you want to pick up trash? Are you sure? (Will loot white rarity items with quantity)")
 GUICtrlCreateGroup("", -99, -99, 1, 1)
-$Inventory_Settings = GUICtrlCreateGroup("Inventory Settings", 208, 56, 177, 217)
-$Label1 = GUICtrlCreateLabel("Free Inventory Slots:", 224, 80, 101, 17)
-$Input1 = GUICtrlCreateInput("64", 232, 104, 81, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_NUMBER))
+$Inventory_Settings = GUICtrlCreateGroup("Inventory Settings", 136, 40, 121, 169)
+$LFreeInvSlot = GUICtrlCreateLabel("Empty Slots", 144, 64, 59, 17)
+$IEmptySlots = GUICtrlCreateInput("48", 168, 88, 49, 21, BitOR($GUI_SS_DEFAULT_INPUT,$ES_NUMBER))
 GUICtrlSetLimit(-1, 3)
-GUICtrlSetTip(-1, "Avaible space for Loot specified by Loot Settings.")
-$Label2 = GUICtrlCreateLabel("Reserved Slots:", 224, 144, 79, 17)
+GUICtrlSetTip(-1, "Number of empty slots in your inventory.")
+$Label2 = GUICtrlCreateLabel("Empty Reserve:", 144, 152, 79, 17)
 GUICtrlSetTip(-1, "When the free inventory slots are full, these slots will be reserved for Ancient Relics and Coelacanths.")
-$Input2 = GUICtrlCreateInput("8", 232, 168, 81, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_NUMBER))
-GUICtrlSetTip(-1, "Additional space restricted to selected Special Items.")
-$Checkbox1 = GUICtrlCreateCheckbox("Discard", 232, 232, 97, 17)
-GUICtrlSetTip(-1, "Throw away fishingrods with zero durability. ")
-$Label3 = GUICtrlCreateLabel("Empty Rods:", 224, 208, 64, 17)
+$IEmptyReserve = GUICtrlCreateInput("4", 168, 176, 49, 21, BitOR($GUI_SS_DEFAULT_INPUT,$ES_NUMBER))
+GUICtrlSetLimit(-1, 2)
+GUICtrlSetTip(-1, "Keep selected amount of empty slots. ( 2 or more should prevent all 'inventory full' errors)")
+$CBEmptyAuto = GUICtrlCreateCheckbox("Autodetect", 152, 112, 97, 17)
+GUICtrlSetState(-1, $GUI_CHECKED)
+GUICtrlSetTip(-1, "Counts empty inventory slots.")
 GUICtrlCreateGroup("", -99, -99, 1, 1)
-$Group3 = GUICtrlCreateGroup("Buff Food", 16, 288, 265, 97)
-$Checkbox2 = GUICtrlCreateCheckbox("Use Buff Food", 32, 336, 97, 17)
-$Combo1 = GUICtrlCreateCombo("", 144, 336, 33, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+$GBuffFood = GUICtrlCreateGroup("Buff Food", 264, 40, 121, 169)
+$CBBuffFood = GUICtrlCreateCheckbox("Use Buff Food", 280, 64, 97, 17)
+$CBuffFood = GUICtrlCreateCombo("", 304, 120, 41, 25, BitOR($CBS_DROPDOWNLIST,$CBS_AUTOHSCROLL))
 GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9|0", "0")
 GUICtrlSetTip(-1, "Put your food on one of the hotkeys.")
-$Label4 = GUICtrlCreateLabel("Hotkey:", 136, 312, 41, 17)
-$Label5 = GUICtrlCreateLabel("Interval:", 216, 312, 42, 17)
-$Input3 = GUICtrlCreateInput("30", 224, 336, 41, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_NUMBER))
+$LHotkey = GUICtrlCreateLabel("Hotkey:", 280, 96, 41, 17)
+$LInterval = GUICtrlCreateLabel("Interval:", 280, 152, 42, 17)
+$IBuffFood = GUICtrlCreateInput("30", 304, 176, 41, 21, BitOR($GUI_SS_DEFAULT_INPUT,$ES_NUMBER))
 GUICtrlSetLimit(-1, 3)
 GUICtrlSetTip(-1, "Interval in minutes.")
 GUICtrlCreateGroup("", -99, -99, 1, 1)
-$Button3 = GUICtrlCreateButton("Save", 304, 304, 75, 73)
+$B_Settings_Save = GUICtrlCreateButton("Save", 336, 232, 43, 145)
+$Misc_Settings = GUICtrlCreateGroup("Misc Settings", 8, 216, 321, 169)
+$CBFeedWorker = GUICtrlCreateCheckbox("Enable Feed Worker", 20, 248, 121, 17)
+GUICtrlSetTip(-1, "Will feed workers every 90 minutes. Make sure to have beer in the inventory.")
+$CBDiscardRods = GUICtrlCreateCheckbox("Enable Discard Rods", 20, 328, 121, 17)
+GUICtrlSetTip(-1, "Discards disposable fishingrods. (Those that can't be repaired)")
+$CBDryFish = GUICtrlCreateCheckbox("Enable Drying Fish", 20, 288, 121, 17)
+GUICtrlSetTip(-1, "Will dry fish when inventory is almost full. Empty Slots will be automatically evaluated after.")
+$CDryFish = GUICtrlCreateCombo("", 236, 286, 82, 25, BitOR($CBS_DROPDOWNLIST,$CBS_AUTOHSCROLL))
+GUICtrlSetData(-1, "White|Green|Blue|Gold", "White")
+GUICtrlSetTip(-1, "Maxmum rarity to use for drying.")
+$LDryingRarity = GUICtrlCreateLabel("Max Rarity:", 176, 290, 57, 17)
+GUICtrlCreateGroup("", -99, -99, 1, 1)
+$Tab_Settings2 = GUICtrlCreateTabItem("Auto-Restock")
+$GRestock_Settings = GUICtrlCreateGroup("Restock Settings", 8, 32, 385, 313)
+$CBSell = GUICtrlCreateCheckbox("Trade Fish", 16, 128, 113, 17)
+GUICtrlSetState(-1, $GUI_CHECKED)
+GUICtrlSetTip(-1, "Visits <Trade Manager> to sell all fish/trade goods.")
+$CBRepair = GUICtrlCreateCheckbox("Repair Inventory", 16, 152, 113, 17)
+GUICtrlSetTip(-1, "Repairs all items in Inventory.")
+$CBBroker = GUICtrlCreateCheckbox("Auction Relics", 16, 176, 113, 17)
+GUICtrlSetTip(-1, "Puts Relics on the item exchange.")
+$CBBank = GUICtrlCreateCheckbox("Store Relics/Money", 16, 200, 113, 17)
+GUICtrlSetState(-1, $GUI_CHECKED)
+GUICtrlSetTip(-1, "Puts Relics and Money in the bank.")
+$ISell = GUICtrlCreateInput("", 136, 128, 209, 21)
+GUICtrlSetTip(-1, "e.g. <Trade Manager> Bahar")
+$IRepair = GUICtrlCreateInput("", 136, 152, 209, 21)
+GUICtrlSetTip(-1, "e.g. <Blacksmith> Tranan")
+$IBroker = GUICtrlCreateInput("", 136, 176, 209, 21)
+GUICtrlSetTip(-1, "e.g. <Marketplace Director> Shiel")
+$IBank = GUICtrlCreateInput("", 136, 200, 209, 21)
+GUICtrlSetTip(-1, "e.g. <Storage Keeper> Ernill")
+$RHorse = GUICtrlCreateRadio("Horse", 24, 80, 113, 17)
+GUICtrlSetState(-1, $GUI_CHECKED)
+$RBoat = GUICtrlCreateRadio("Boat", 24, 96, 113, 17)
+$LNPCName = GUICtrlCreateLabel("NPC Name (Leave empty for nearest):", 152, 104, 183, 17)
+GUICtrlSetTip(-1, "Always use the full title of the NPC! E.g. <Trade Manager> Bahar")
+$LMount = GUICtrlCreateLabel("Walk back to mount:", 24, 64, 103, 17)
+GUICtrlSetTip(-1, "Position your mount at you fishing spot so that you can fish after autopathing to this point.")
+$BTestRestock = GUICtrlCreateButton("Test Auto-Restock", 140, 255, 115, 25)
+GUICtrlSetTip(-1, "Test your route to make sure it works!")
+$GRestock = GUICtrlCreateGroup("", 176, 48, 145, 41)
+$CBRestock = GUICtrlCreateCheckbox("Enable Auto-Restock", 190, 62, 121, 17)
+GUICtrlSetTip(-1, "Will visit selected NPCs when Inventory is full or no fishing rods are usable. Requires a mount as anchorpoint!")
+GUICtrlCreateGroup("", -99, -99, 1, 1)
+$CSell = GUICtrlCreateCombo("", 352, 128, 33, 25, BitOR($CBS_DROPDOWNLIST,$CBS_AUTOHSCROLL))
+GUICtrlSetData(-1, "1|2|3|4", "1")
+GUICtrlSetTip(-1, "Order in which the NPCs are visited. 1 will be first and 4 will be last.")
+$CRepair = GUICtrlCreateCombo("", 352, 152, 33, 25, BitOR($CBS_DROPDOWNLIST,$CBS_AUTOHSCROLL))
+GUICtrlSetData(-1, "1|2|3|4", "2")
+GUICtrlSetTip(-1, "Order in which the NPCs are visited. 1 will be first and 4 will be last.")
+$CBroker = GUICtrlCreateCombo("", 352, 176, 33, 25, BitOR($CBS_DROPDOWNLIST,$CBS_AUTOHSCROLL))
+GUICtrlSetData(-1, "1|2|3|4", "3")
+GUICtrlSetTip(-1, "Order in which the NPCs are visited. 1 will be first and 4 will be last.")
+$CBank = GUICtrlCreateCombo("", 352, 200, 33, 25, BitOR($CBS_DROPDOWNLIST,$CBS_AUTOHSCROLL))
+GUICtrlSetData(-1, "1|2|3|4", "4")
+GUICtrlSetTip(-1, "Order in which the NPCs are visited. 1 will be first and 4 will be last.")
+$LOrder = GUICtrlCreateLabel("Order:", 352, 104, 33, 17)
+GUICtrlSetTip(-1, "Order in which the NPCs are visited. 1 will be first and 4 will be last.")
+GUICtrlCreateGroup("", -99, -99, 1, 1)
+$B_Restock_Save = GUICtrlCreateButton("Save", 304, 355, 75, 33)
+$Tab_RandomSettings = GUICtrlCreateTabItem("Randomization")
+$GRandomization = GUICtrlCreateGroup("Randomization Settings", 8, 32, 377, 137)
+$I_RS_ReelIn_Min = GUICtrlCreateInput("1000", 96, 88, 121, 21)
+$L_RS_ReelIn = GUICtrlCreateLabel("Reel In:", 24, 88, 41, 17)
+GUICtrlSetTip(-1, "Waits random amount of time when the fishing icon appears over your head.")
+$L_RS_Min = GUICtrlCreateLabel("Min (Milliseconds)", 112, 64, 87, 17)
+$L_RS_Max = GUICtrlCreateLabel("Max (Milliseconds)", 256, 64, 90, 17)
+$I_RS_ReelIn_Max = GUICtrlCreateInput("5000", 240, 88, 121, 21)
+$I_RS_Riddle_Min = GUICtrlCreateInput("50", 96, 120, 121, 21)
+$I_RS_Riddle_Max = GUICtrlCreateInput("500", 240, 120, 121, 21)
+$L_RS_Riddle = GUICtrlCreateLabel("Riddle:", 24, 120, 37, 17)
+GUICtrlSetTip(-1, "Waits random time between sending the keystrokes.")
+GUICtrlCreateGroup("", -99, -99, 1, 1)
+$B_Random_Save = GUICtrlCreateButton("Save", 304, 355, 75, 33)
 $Tab_Info = GUICtrlCreateTabItem("Info")
-$Credits = GUICtrlCreateEdit("", 32, 72, 337, 289, BitOR($ES_CENTER, $ES_READONLY))
+$Credits = GUICtrlCreateEdit("", 32, 72, 337, 289, BitOR($ES_CENTER,$ES_READONLY))
 GUICtrlSetData(-1, "Author: CrayonCode")
-$Tab_Settings2 = GUICtrlCreateTabItem("Advanced")
-$GRestock_Settings = GUICtrlCreateGroup("Restock Settings", 16, 40, 369, 233)
-$CBSell = GUICtrlCreateCheckbox("Trade Fish", 32, 136, 113, 17)
-GUICtrlSetState(-1, $GUI_CHECKED)
-$CBRepair = GUICtrlCreateCheckbox("Repair Inventory", 32, 160, 113, 17)
-$CBBroker = GUICtrlCreateCheckbox("Auction Relics", 32, 184, 113, 17)
-$CBBank = GUICtrlCreateCheckbox("Store Relics/Money", 32, 208, 113, 17)
-GUICtrlSetState(-1, $GUI_CHECKED)
-$ISell = GUICtrlCreateInput("", 152, 136, 209, 21)
-$IRepair = GUICtrlCreateInput("", 152, 160, 209, 21)
-$IBroker = GUICtrlCreateInput("", 152, 184, 209, 21)
-$IBank = GUICtrlCreateInput("", 152, 208, 209, 21)
-$Input5 = GUICtrlCreateInput("Input5", 360, 88, 1, 21)
-$RHorse = GUICtrlCreateRadio("Horse", 32, 88, 113, 17)
-GUICtrlSetState(-1, $GUI_CHECKED)
-$RBoat = GUICtrlCreateRadio("Boat", 32, 104, 113, 17)
-$LNPCName = GUICtrlCreateLabel("NPC Name (Leave empty for nearest):", 160, 112, 183, 17)
-$LMount = GUICtrlCreateLabel("Walk back to mount:", 32, 72, 103, 17)
-$BTestRestock = GUICtrlCreateButton("Test Restock", 132, 239, 115, 25)
-$GRestock = GUICtrlCreateGroup("", 184, 56, 145, 41)
-$CBRestock = GUICtrlCreateCheckbox("Enable Auto-Restock", 198, 70, 121, 17)
-GUICtrlCreateGroup("", -99, -99, 1, 1)
-GUICtrlCreateGroup("", -99, -99, 1, 1)
-$MiscSettings = GUICtrlCreateGroup("Misc Settings", 16, 280, 273, 113)
-$CBWorker = GUICtrlCreateCheckbox("Enable Feed Worker", 32, 312, 121, 17)
-GUICtrlCreateGroup("", -99, -99, 1, 1)
-$BSave = GUICtrlCreateButton("Save", 304, 307, 75, 73)
 GUICtrlCreateTabItem("")
 GUISetState(@SW_SHOW)
 #EndRegion ### END Koda GUI section ###
+
 
 #Region - 1920x1080 Values for DetectState()
 ; Press 'Space' near a body of water to start fishing.
@@ -145,13 +207,293 @@ Opt("SendKeyDelay", 50)
 Global $Fish = False
 Global $Bufftimer = TimerInit(), $FeedWorkertimer = TimerInit()
 Global $Breaktimer
+Global $DryFishCooldownTimer = 0
+Global $LastGUIStatus
+Global $freedetectedslots = 0
+$ListView1_0 = GUICtrlCreateListViewItem("White", $ListView1)
+$ListView1_1 = GUICtrlCreateListViewItem("Green", $ListView1)
+$ListView1_2 = GUICtrlCreateListViewItem("Blue", $ListView1)
+$ListView1_3 = GUICtrlCreateListViewItem("Gold", $ListView1)
+$ListView1_4 = GUICtrlCreateListViewItem("Silver Key", $ListView1)
+$ListView1_5 = GUICtrlCreateListViewItem("Ancient Relic", $ListView1)
+$ListView1_6 = GUICtrlCreateListViewItem("Coelacanth", $ListView1)
+$ListView1_7 = GUICtrlCreateListViewItem("Event items", $ListView1)
+$ListView1_8 = GUICtrlCreateListViewItem("Trash", $ListView1)
 
 
-HotKeySet("{F9}", "_terminate")
+
+HotKeySet("^{F1}", "_terminate")
 HotKeySet("{F5}", "ClearInv")
 HotKeySet("{F4}", "Fish")
 HotKeySet("{F8}", "ResetSession")
 
+Func InitGUI()
+
+	; Loot Settings
+	Global $LootSettings = IniReadSection("config/data.ini", "LootSettings")
+	Switch $LootSettings[1][1]
+		Case 0
+			GUICtrlSetData($CRarity, "|Gold|Blue|Green|White|Specials Only", "White")
+		Case 1
+			GUICtrlSetData($CRarity, "|Gold|Blue|Green|White|Specials Only", "Green")
+		Case 2
+			GUICtrlSetData($CRarity, "|Gold|Blue|Green|White|Specials Only", "Blue")
+		Case 3
+			GUICtrlSetData($CRarity, "|Gold|Blue|Green|White|Specials Only", "Gold")
+		Case 4
+			GUICtrlSetData($CRarity, "|Gold|Blue|Green|White|Specials Only", "Specials Only")
+	EndSwitch
+	GUICtrlSetState($CBSpecial1, CBT($LootSettings[2][1]))
+	GUICtrlSetState($CBSpecial2, CBT($LootSettings[3][1]))
+	GUICtrlSetState($CBSpecial3, CBT($LootSettings[4][1]))
+	GUICtrlSetState($CBEvent, CBT($LootSettings[5][1]))
+	GUICtrlSetState($CBTrash, CBT($LootSettings[6][1]))
+
+	; Inventory Settings
+	Global $InventorySettings = IniReadSection("config/data.ini", "InventorySettings")
+	GUICtrlSetData($IEmptySlots, $InventorySettings[1][1])
+	GUICtrlSetData($IEmptyReserve, $InventorySettings[2][1])
+	GUICtrlSetState($CBDiscardRods, CBT($InventorySettings[3][1]))
+	GUICtrlSetState($CBEmptyAuto, CBT($InventorySettings[4][1]))
+	de_acvtivate($InventorySettings[4][1], $IEmptySlots)
+
+	; Drying Settings
+	Global $DryingSettings = IniReadSection("config/data.ini", "DryingSettings")
+	GUICtrlSetState($CBDryFish, CBT($DryingSettings[1][1]))
+	Switch $DryingSettings[2][1]
+		Case 0
+			GUICtrlSetData($CDryFish, "|Gold|Blue|Green|White", "White")
+		Case 1
+			GUICtrlSetData($CDryFish, "|Gold|Blue|Green|White", "Green")
+		Case 2
+			GUICtrlSetData($CDryFish, "|Gold|Blue|Green|White", "Blue")
+		Case 3
+			GUICtrlSetData($CDryFish, "|Gold|Blue|Green|White", "Gold")
+	EndSwitch
+
+	; Food Settings
+	Global $FoodSettings = IniReadSection("config/data.ini", "FoodSettings")
+	GUICtrlSetState($CBBuffFood, CBT($FoodSettings[1][1]))
+	GUICtrlSetData($CBuffFood, $FoodSettings[2][1])
+	GUICtrlSetData($IBuffFood, $FoodSettings[3][1])
+
+	; Restock Settings
+	Global $RestockSettings = IniReadSection("config/data.ini", "RestockSettings")
+	GUICtrlSetState($CBRestock, CBT($RestockSettings[1][1])) ; Enable Auto-Restock
+	If $RestockSettings[2][1] = 0 Then ; Select Horse or Boat
+		GUICtrlSetState($RHorse, 1)
+	Else
+		GUICtrlSetState($RBoat, 1)
+	EndIf
+	GUICtrlSetState($CBSell, CBT($RestockSettings[3][1])) ; Trade Fish
+	GUICtrlSetState($CBRepair, CBT($RestockSettings[4][1])) ; Repair Inventory
+	GUICtrlSetState($CBBroker, CBT($RestockSettings[5][1])) ; Auction Relics
+	GUICtrlSetState($CBBank, CBT($RestockSettings[6][1])) ; Store Relics/Money
+	GUICtrlSetData($ISell, $RestockSettings[7][1])
+	GUICtrlSetData($IRepair, $RestockSettings[8][1])
+	GUICtrlSetData($IBroker, $RestockSettings[9][1])
+	GUICtrlSetData($IBank, $RestockSettings[10][1])
+	GUICtrlSetData($CSell, $RestockSettings[11][1])
+	GUICtrlSetData($CRepair, $RestockSettings[12][1])
+	GUICtrlSetData($CBroker, $RestockSettings[13][1])
+	GUICtrlSetData($CBank, $RestockSettings[14][1])
+
+	; WorkerSettings
+	Global $WorkerSettings = IniReadSection("config/data.ini", "WorkerSettings")
+	GUICtrlSetState($CBFeedWorker, CBT($WorkerSettings[1][1]))
+
+	; Randomization Settings
+	Global $RandomSettings = IniReadSection("config/data.ini", "RandomSettings")
+	GUICtrlSetData($I_RS_ReelIn_Min, $RandomSettings[1][1])
+	GUICtrlSetData($I_RS_ReelIn_Max, $RandomSettings[2][1])
+	GUICtrlSetData($I_RS_Riddle_Min, $RandomSettings[3][1])
+	GUICtrlSetData($I_RS_Riddle_Max, $RandomSettings[4][1])
+
+	; Stats
+	Global $SessionStats = IniReadSection("config/data.ini", "SessionStats")
+	Global $TotalStats = IniReadSection("config/data.ini", "TotalStats")
+	GUICtrlSetData($ListView1_0, $SessionStats[1][0] & "|" & $SessionStats[1][1] & "|" & $TotalStats[1][1], "")
+	GUICtrlSetData($ListView1_1, $SessionStats[2][0] & "|" & $SessionStats[2][1] & "|" & $TotalStats[2][1], "")
+	GUICtrlSetData($ListView1_2, $SessionStats[3][0] & "|" & $SessionStats[3][1] & "|" & $TotalStats[3][1], "")
+	GUICtrlSetData($ListView1_3, $SessionStats[4][0] & "|" & $SessionStats[4][1] & "|" & $TotalStats[4][1], "")
+	GUICtrlSetData($ListView1_4, $SessionStats[5][0] & "|" & $SessionStats[5][1] & "|" & $TotalStats[5][1], "")
+	GUICtrlSetData($ListView1_5, $SessionStats[6][0] & "|" & $SessionStats[6][1] & "|" & $TotalStats[6][1], "")
+	GUICtrlSetData($ListView1_6, $SessionStats[7][0] & "|" & $SessionStats[7][1] & "|" & $TotalStats[7][1], "")
+	GUICtrlSetData($ListView1_7, $SessionStats[8][0] & "|" & $SessionStats[8][1] & "|" & $TotalStats[8][1], "")
+	GUICtrlSetData($ListView1_8, $SessionStats[9][0] & "|" & $SessionStats[9][1] & "|" & $TotalStats[9][1], "")
+
+	; Inventory Status
+	Global $CurrentStats = IniReadSection("config/data.ini", "CurrentStats")
+	SetGUIInventory(0, $freedetectedslots)
+	GUICtrlSetData($E_Status, "Please equip a fishing rod. Then start.", "")
+
+	; Credits
+	Local $creditstext = "Author: CrayonCode" & @CRLF & @CRLF
+	$creditstext &= "This project is specifically made for the english Black Desert EU/NA client." & @CRLF & $creditstext
+	$creditstext &= "Requirements are 1920x1080 Windowed Fullscreen and the default font." & @CRLF & @CRLF
+	$creditstext &= "This project is Open Source and serves for educational purposes only." & @CRLF & @CRLF
+	$creditstext &= "Contact & Feedback @ http://www.elitepvpers.com/forum/black-desert/4268940-autoit-crayoncode-bot-project-opensource-free.html"
+	GUICtrlSetData($Credits, $creditstext)
+
+EndFunc   ;==>InitGUI
+
+Func StoreGUI()
+
+	; Loot Settings
+	Global $LootSettings = IniReadSection("config/data.ini", "LootSettings")
+	Switch GUICtrlRead($CRarity)
+		Case "White"
+			$LootSettings[1][1] = 0
+		Case "Green"
+			$LootSettings[1][1] = 1
+		Case "Blue"
+			$LootSettings[1][1] = 2
+		Case "Gold"
+			$LootSettings[1][1] = 3
+		Case "Specials Only"
+			$LootSettings[1][1] = 4
+	EndSwitch
+	$LootSettings[2][1] = CBT(GUICtrlRead($CBSpecial1))
+	$LootSettings[3][1] = CBT(GUICtrlRead($CBSpecial2))
+	$LootSettings[4][1] = CBT(GUICtrlRead($CBSpecial3))
+	$LootSettings[5][1] = CBT(GUICtrlRead($CBEvent))
+	$LootSettings[6][1] = CBT(GUICtrlRead($CBTrash))
+	IniWriteSection("config/data.ini", "LootSettings", $LootSettings)
+
+	; Inventory Settings
+	Global $InventorySettings = IniReadSection("config/data.ini", "InventorySettings")
+	$InventorySettings[1][1] = Int(GUICtrlRead($IEmptySlots))
+	$InventorySettings[2][1] = Int(GUICtrlRead($IEmptyReserve))
+	If $InventorySettings[2][1] < 1 Then $InventorySettings[2][1] = 1
+	$InventorySettings[3][1] = CBT(GUICtrlRead($CBDiscardRods)) ; Discard Rods
+	$InventorySettings[4][1] = CBT(GUICtrlRead($CBEmptyAuto))
+	IniWriteSection("config/data.ini", "InventorySettings", $InventorySettings)
+
+	; Drying Settigns
+	Global $DryingSettings = IniReadSection("config/data.ini", "DryingSettings")
+	$DryingSettings[1][1] = CBT(GUICtrlRead($CBDryFish)) ; Discard Rods
+	Switch GUICtrlRead($CDryFish)
+		Case "White"
+			$DryingSettings[2][1] = 0
+		Case "Green"
+			$DryingSettings[2][1] = 1
+		Case "Blue"
+			$DryingSettings[2][1] = 2
+		Case "Gold"
+			$DryingSettings[2][1] = 3
+	EndSwitch
+	IniWriteSection("config/data.ini", "DryingSettings", $DryingSettings)
+
+	; Food Settings
+	Global $FoodSettings = IniReadSection("config/data.ini", "FoodSettings")
+	$FoodSettings[1][1] = CBT(GUICtrlRead($CBBuffFood))
+	$FoodSettings[2][1] = GUICtrlRead($CBuffFood)
+	$FoodSettings[3][1] = GUICtrlRead($IBuffFood)
+	IniWriteSection("config/data.ini", "FoodSettings", $FoodSettings)
+
+	; Restock Settings
+	Global $RestockSettings = IniReadSection("config/data.ini", "RestockSettings")
+	$RestockSettings[1][1] = CBT(GUICtrlRead($CBRestock))
+	If GUICtrlRead($RHorse) = 1 Then
+		$RestockSettings[2][1] = 0
+	Else
+		$RestockSettings[2][1] = 1
+	EndIf
+	$RestockSettings[3][1] = CBT(GUICtrlRead($CBSell))
+	$RestockSettings[4][1] = CBT(GUICtrlRead($CBRepair))
+	$RestockSettings[5][1] = CBT(GUICtrlRead($CBBroker))
+	$RestockSettings[6][1] = CBT(GUICtrlRead($CBBank))
+	$RestockSettings[7][1] = GUICtrlRead($ISell)
+	$RestockSettings[8][1] = GUICtrlRead($IRepair)
+	$RestockSettings[9][1] = GUICtrlRead($IBroker)
+	$RestockSettings[10][1] = GUICtrlRead($IBank)
+	$RestockSettings[11][1] = Int(GUICtrlRead($CSell))
+	$RestockSettings[12][1] = Int(GUICtrlRead($CRepair))
+	$RestockSettings[13][1] = Int(GUICtrlRead($CBroker))
+	$RestockSettings[14][1] = Int(GUICtrlRead($CBank))
+	IniWriteSection("config/data.ini", "RestockSettings", $RestockSettings)
+
+	; Worker Settings
+	Global $WorkerSettings = IniReadSection("config/data.ini", "WorkerSettings")
+	$WorkerSettings[1][1] = CBT(GUICtrlRead($CBFeedWorker))
+	IniWriteSection("config/data.ini", "WorkerSettings", $WorkerSettings)
+
+	; Randomization Settings
+	Global $RandomSettings = IniReadSection("config/data.ini", "RandomSettings")
+	$RandomSettings[1][1] = GUICtrlRead($I_RS_ReelIn_Min)
+	$RandomSettings[2][1] = GUICtrlRead($I_RS_ReelIn_Max)
+	$RandomSettings[3][1] = GUICtrlRead($I_RS_Riddle_Min)
+	$RandomSettings[4][1] = GUICtrlRead($I_RS_Riddle_Max)
+	IniWriteSection("config/data.ini", "RandomSettings", $RandomSettings)
+
+	InitGUI()
+EndFunc   ;==>StoreGUI
+
+Func SetGUIStatus($data)
+	If $data <> $LastGUIStatus Then
+		GUICtrlSetData($E_Status, $data, "")
+		ConsoleWrite(@CRLF & @Hour & ":" & @Min & "." & @SEC & " " & $data)
+		$LastGUIStatus = $data
+	EndIf
+EndFunc   ;==>SetGUIStatus
+
+Func SetGUIInventory($PickedLoot, $overwritefreeslots = 0)
+	Local $InventorySettings = IniReadSection("config/data.ini", "InventorySettings")
+
+	If $overwritefreeslots > 0 Then
+		GUICtrlSetData($E_Inventory, $PickedLoot & " / " & $overwritefreeslots - $InventorySettings[2][1] & " (automatic)", "")
+	Else
+		GUICtrlSetData($E_Inventory, $PickedLoot & " / " & $InventorySettings[1][1] - $InventorySettings[2][1] & " (legacy)", "")
+	EndIf
+	IniWrite("config/data.ini", "CurrentStats", "PickedLoot", $PickedLoot)
+	Return ($PickedLoot)
+EndFunc   ;==>SetGUIInventory
+
+Func GUILoopSwitch()
+	Switch GUIGetMsg()
+		Case $GUI_EVENT_CLOSE
+			Exit
+		Case $B_Settings_Save ;Save
+			StoreGUI()
+		Case $B_Random_Save
+			StoreGUI()
+		Case $B_Restock_Save
+			StoreGUI()
+		Case $BReset
+			ResetSession()
+		Case $BStart
+			Fish()
+		Case $ButtonClear
+			ClearInv()
+		Case $BTestRestock
+			Restock()
+		Case $CBEmptyAuto
+			de_acvtivate(GUICtrlRead($CBEmptyAuto), $IEmptySlots)
+	EndSwitch
+EndFunc   ;==>GUILoopSwitch
+
+Func ResetSession()
+	Local $SessionStats = IniReadSection("config/data.ini", "SessionStats")
+	For $i = 1 To UBound($SessionStats) - 1 Step 1
+		$SessionStats[$i][1] = 0
+	Next
+	IniWriteSection("config/data.ini", "SessionStats", $SessionStats)
+	InitGUI()
+EndFunc   ;==>ResetSession
+
+Func ClearInv()
+	SetGUIInventory(0, $freedetectedslots)
+EndFunc   ;==>ClearInv
+
+Func de_acvtivate($cbstate, $uitarget)
+	If $cbstate = 1 Then
+		GUICtrlSetState($uitarget, 128)
+		Return True
+	ElseIf $cbstate = 4 Then
+		GUICtrlSetState($uitarget, 64)
+		Return True
+	EndIf
+EndFunc
 
 Func _terminate()
 	Exit (0)
@@ -194,7 +536,7 @@ Func ReelIn()
 	Local $P[5] = [849, 368, 1068, 372, 16777215]
 	Local $SSN = 1, $NS
 	Local $RandomSettings = IniReadSection("config/data.ini", "RandomSettings")
-	Local $RandomSleep = Random($RandomSettings[3][1], $RandomSettings[4][1], 1)
+	Local $RandomSleep = Random($RandomSettings[1][1], $RandomSettings[2][1], 1)
 
 	SetGUIStatus("Reeling in. (" & Round($RandomSleep / 1000, 0) & "s)")
 	Sleep($RandomSleep)
@@ -280,7 +622,7 @@ Func Riddler()
 	Else
 		For $i = 0 To 9 Step 1
 			If $Word[$i] <> "." Then
-				Sleep(Random($RandomSettings[1][1], $RandomSettings[2][1], 1))
+				Sleep(Random($RandomSettings[3][1], $RandomSettings[4][1], 1))
 				CoSe($Word[$i])
 			EndIf
 			Sleep(100)
@@ -293,39 +635,53 @@ Func DocLoot(ByRef $Loot)
 
 	Local $TotalStats = IniReadSection("config/data.ini", "TotalStats")
 	Local $SessionStats = IniReadSection("config/data.ini", "SessionStats")
+	For $j = 0 To 8 Step 1
+		_GUICtrlListView_SetItemSelected ( $ListView1, $j , False ,False )
+	Next
 
 	For $i = 0 To UBound($Loot) - 1 Step 1
 		Switch $Loot[$i][0]
-			Case -1 ; Empty
+			Case -1 ; Trash
+				$TotalStats[9][1] += 1
+				$SessionStats[9][1] += 1
+				_GUICtrlListView_SetItemSelected ( $ListView1, 8 , True ,True )
 			Case 0 ; White
 				$TotalStats[1][1] += 1
 				$SessionStats[1][1] += 1
+				_GUICtrlListView_SetItemSelected ( $ListView1, 0 , True ,True )
 			Case 1 ; Green
 				$TotalStats[2][1] += 1
 				$SessionStats[2][1] += 1
+				_GUICtrlListView_SetItemSelected ( $ListView1, 1 , True ,True )
 			Case 2 ; Blue
 				$TotalStats[3][1] += 1
 				$SessionStats[3][1] += 1
+				_GUICtrlListView_SetItemSelected ( $ListView1, 2 , True ,True )
 			Case 3 ; Gold
 				$TotalStats[4][1] += 1
 				$SessionStats[4][1] += 1
+				_GUICtrlListView_SetItemSelected ( $ListView1, 3 , True ,True )
 		EndSwitch
 
 		Switch $Loot[$i][1]
 			Case 1 ; Silverkey
 				$TotalStats[5][1] += 1
 				$SessionStats[5][1] += 1
+				_GUICtrlListView_SetItemSelected ( $ListView1, 4 , True ,True )
 			Case 2 ; AncientRelic
 				$TotalStats[6][1] += 1
 				$SessionStats[6][1] += 1
+				_GUICtrlListView_SetItemSelected ( $ListView1, 5 , True ,True )
 			Case 3 ; Coelacanth
 				$TotalStats[7][1] += 1
 				$SessionStats[7][1] += 1
+				_GUICtrlListView_SetItemSelected ( $ListView1, 6 , True ,True )
 		EndSwitch
 
 		If $Loot[$i][2] > 0 Then ; Event items
 			$TotalStats[8][1] += 1
 			$SessionStats[8][1] += 1
+			_GUICtrlListView_SetItemSelected ( $ListView1, 7 , True ,True )
 		EndIf
 	Next
 	IniWriteSection("config/data.ini", "TotalStats", $TotalStats)
@@ -338,16 +694,17 @@ Func DocLoot(ByRef $Loot)
 	GUICtrlSetData($ListView1_4, $SessionStats[5][0] & "|" & $SessionStats[5][1] & "|" & $TotalStats[5][1], "")
 	GUICtrlSetData($ListView1_5, $SessionStats[6][0] & "|" & $SessionStats[6][1] & "|" & $TotalStats[6][1], "")
 	GUICtrlSetData($ListView1_6, $SessionStats[7][0] & "|" & $SessionStats[7][1] & "|" & $TotalStats[7][1], "")
+	GUICtrlSetData($ListView1_7, $SessionStats[8][0] & "|" & $SessionStats[8][1] & "|" & $TotalStats[8][1], "")
+	GUICtrlSetData($ListView1_8, $SessionStats[9][0] & "|" & $SessionStats[9][1] & "|" & $TotalStats[9][1], "")
 EndFunc   ;==>DocLoot
 
 Func DetectLoot()
 	Local Const $Rarity[4] = ["", 4486950, 3966379, 10651464] ; Green, Blue, Gold
-	Local Const $SpecialLootIdentifier[4] = ["", "res/loot_silverkey.bmp", "res/loot_ancientrelic.bmp", "res/loot_coelacanth.bmp"]
+	Local Const $SpecialLootIdentifier[4] = ["res/loot_quantity.bmp", "res/loot_silverkey.bmp", "res/loot_ancientrelic.bmp", "res/loot_coelacanth.bmp"]
 	Local Const $EventIdentifier = _FileListToArray("res/event/", "*", 0)
 	Local Const $LW[5] = [1538, 594, 1540, 638, 46] ; left, top, right, bottom, offset
 	Local $Loot[4][3] = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
 	Local $FF, $x, $y, $SSN = 1
-	Local $FFmean[3]
 
 	For $j = 0 To 3 Step 1
 		For $i = 1 To UBound($Rarity) - 1 Step 1
@@ -358,7 +715,12 @@ Func DetectLoot()
 		Next
 		If $Loot[$j][0] = 0 Then
 			$IS = _ImageSearchArea("res/reference_empty.bmp", 0, $LW[0] + $LW[4] * $j, $LW[1], $LW[2] + 44 + $LW[4] * $j, $LW[3], $x, $y, 20, 0)
-			If $IS Then $Loot[$j][0] = -1
+			If $IS Then
+				$Loot[$j][0] = -2
+			Else
+				$IS = _ImageSearchArea($SpecialLootIdentifier[0], 0, $LW[0] + $LW[4] * $j, $LW[1], $LW[2] + 44 + $LW[4] * $j, $LW[3], $x, $y, 40, 0)
+				If $IS Then $Loot[$j][0] = -1
+			EndIf
 		EndIf
 		For $i = 1 To UBound($SpecialLootIdentifier) - 1 Step 1
 			If _ImageSearchArea($SpecialLootIdentifier[$i], 0, $LW[0] + $LW[4] * $j, $LW[1], $LW[2] + 44 + $LW[4] * $j, $LW[3], $x, $y, 20, 0) = 1 Then
@@ -373,16 +735,16 @@ Func DetectLoot()
 	Next
 
 
-	Local $CWLoot = @CRLF & "Loot:"
+	Local $CWLoot = "Loot:"
 
-	For $j = 0 To Ubound($Loot, 1) - 1 Step 1
+	For $j = 0 To UBound($Loot, 1) - 1 Step 1
 		$CWLoot &= "["
-		For $i = 0 To Ubound($Loot, 2) - 1 Step 1
+		For $i = 0 To UBound($Loot, 2) - 1 Step 1
 			$CWLoot &= $Loot[$j][$i]
 		Next
 		$CWLoot &= "]"
 	Next
-	ConsoleWrite($CWLoot)
+	SetGUIStatus($CWLoot)
 
 	Return $Loot
 EndFunc   ;==>DetectLoot
@@ -396,7 +758,11 @@ Func HandleLoot()
 
 	DocLoot($Loot)
 	For $j = 0 To 3 Step 1
-		If $Loot[$j][0] >= Int($LootSettings[1][1]) Then $Pick[$j] += 1 ; Rarity
+		If $Loot[$j][0] >= Int($LootSettings[1][1]) Then
+			$Pick[$j] += 1 ; Rarity
+		Else
+			If $Loot[$j][0] = -1 And Int($LootSettings[6][1]) = 1 Then $Pick[$j] += 1 ; Trash
+		EndIf
 		Switch $Loot[$j][1]
 			Case 1 ; Silverkey
 				If Int($LootSettings[2][1]) Then $Pick[$j] += 10
@@ -408,57 +774,27 @@ Func HandleLoot()
 		If $Loot[$j][2] > 0 And Int($LootSettings[5][1]) Then $Pick[$j] += 10 ; Event items
 	Next
 
-	CoSe("{LCTRL}")
-	Sleep(50)
-
-	ConsoleWrite($Pick[0] & $Pick[1] & $Pick[2] & $Pick[3])
+	SetGUIStatus("Pick:[" & $Pick[0] & "][" & $Pick[1] & "][" & $Pick[2] & "][" & $Pick[3] & "]")
 	For $j = 3 To 0 Step -1
 		If $Pick[$j] > 0 Then
+			CoSe("{LCTRL}")
+			Sleep(50)
 			If $Pick[$j] < 10 Then $PickedLoot += 1
 			MouseMove($LW[0] + 20 + $LW[4] * $j, $LW[1] + 20)
 			Sleep(50)
 			MouseClick("right", $LW[0] + 20 + $LW[4] * $j, $LW[1] + 20, 1)
 			Sleep(50)
+			CoSe("{LCTRL}")
+			Sleep(50)
 		EndIf
 	Next
-	CoSe("{LCTRL}")
 	SetGUIInventory($PickedLoot)
 
 	Return $PickedLoot
 EndFunc   ;==>HandleLoot
 
-Func SetGUIStatus($data)
-	GUICtrlSetData($Edit1, $data, "")
-EndFunc   ;==>SetGUIStatus
-
-Func SetGUIInventory($PickedLoot, $overwritefreeslots = 0)
-	Local $InventorySettings[3] = [Int(IniRead("config/data.ini", "InventorySettings", "FreeSlots", 16)), Int(IniRead("config/data.ini", "InventorySettings", "ReservedSlots", 8)), Int(IniRead("config/data.ini", "InventorySettings", "DiscardRods", 0))]
-
-	If $overwritefreeslots > 0 Then
-		GUICtrlSetData($Edit2, $PickedLoot & " / " & $overwritefreeslots - $InventorySettings[1] & " (" & $InventorySettings[0]& " - " &$InventorySettings[1] & ")", "")
-	Else
-		GUICtrlSetData($Edit2, $PickedLoot & " / " & $InventorySettings[0] - $InventorySettings[1] & " (" & $InventorySettings[0]& " - " &$InventorySettings[1] & ")", "")
-	EndIf
-	IniWrite("config/data.ini", "CurrentStats", "PickedLoot", $PickedLoot)
-	Return ($PickedLoot)
-EndFunc   ;==>SetGUIInventory
-
-Func ResetSession()
-	Local $SessionStats = IniReadSection("config/data.ini", "SessionStats")
-	For $i = 1 To UBound($SessionStats) - 1 Step 1
-		$SessionStats[$i][1] = 0
-	Next
-	IniWriteSection("config/data.ini", "SessionStats", $SessionStats)
-	SetGUIInventory(0)
-	InitGUI()
-EndFunc   ;==>ResetSession
-
-Func ClearInv()
-	SetGUIInventory(0)
-EndFunc   ;==>ClearInv
-
 Func CBT($data) ; Transforms Checkbox values for ini
-	Switch $data
+	Switch Int($data)
 		Case 1
 			Return 1
 		Case 4
@@ -468,173 +804,21 @@ Func CBT($data) ; Transforms Checkbox values for ini
 	EndSwitch
 EndFunc   ;==>CBT
 
-Func InitGUI()
-
-	; Loot Settings
-	Local $LootSettings = IniReadSection("config/data.ini", "LootSettings")
-	Switch $LootSettings[1][1]
-		Case 0
-			GUICtrlSetData($CRarity, "|Gold|Blue|Green|White|Specials Only", "White")
-		Case 1
-			GUICtrlSetData($CRarity, "|Gold|Blue|Green|White|Specials Only", "Green")
-		Case 2
-			GUICtrlSetData($CRarity, "|Gold|Blue|Green|White|Specials Only", "Blue")
-		Case 3
-			GUICtrlSetData($CRarity, "|Gold|Blue|Green|White|Specials Only", "Gold")
-		Case 4
-			GUICtrlSetData($CRarity, "|Gold|Blue|Green|White|Specials Only", "Specials Only")
-	EndSwitch
-	GUICtrlSetState($CBSpecial1, CBT($LootSettings[2][1]))
-	GUICtrlSetState($CBSpecial2, CBT($LootSettings[3][1]))
-	GUICtrlSetState($CBSpecial3, CBT($LootSettings[4][1]))
-
-	; Inventory Settings
-	Local $InventorySettings = IniReadSection("config/data.ini", "InventorySettings")
-	GUICtrlSetData($Input1, $InventorySettings[1][1])
-	GUICtrlSetData($Input2, $InventorySettings[2][1])
-	GUICtrlSetState($Checkbox1, CBT($InventorySettings[3][1]))
-
-	; Food Settings
-	Local $FoodSettings = IniReadSection("config/data.ini", "FoodSettings")
-	GUICtrlSetState($Checkbox2, CBT($FoodSettings[1][1]))
-	GUICtrlSetData($Combo1, $FoodSettings[2][1])
-	GUICtrlSetData($Input3, $FoodSettings[3][1])
-
-	; Stats
-	Local $SessionStats = IniReadSection("config/data.ini", "SessionStats")
-	Local $TotalStats = IniReadSection("config/data.ini", "TotalStats")
-	GUICtrlSetData($ListView1_0, $SessionStats[1][0] & "|" & $SessionStats[1][1] & "|" & $TotalStats[1][1], "")
-	GUICtrlSetData($ListView1_1, $SessionStats[2][0] & "|" & $SessionStats[2][1] & "|" & $TotalStats[2][1], "")
-	GUICtrlSetData($ListView1_2, $SessionStats[3][0] & "|" & $SessionStats[3][1] & "|" & $TotalStats[3][1], "")
-	GUICtrlSetData($ListView1_3, $SessionStats[4][0] & "|" & $SessionStats[4][1] & "|" & $TotalStats[4][1], "")
-	GUICtrlSetData($ListView1_4, $SessionStats[5][0] & "|" & $SessionStats[5][1] & "|" & $TotalStats[5][1], "")
-	GUICtrlSetData($ListView1_5, $SessionStats[6][0] & "|" & $SessionStats[6][1] & "|" & $TotalStats[6][1], "")
-	GUICtrlSetData($ListView1_6, $SessionStats[7][0] & "|" & $SessionStats[7][1] & "|" & $TotalStats[7][1], "")
-
-	; Inventory Status
-	Local $CurrentStats = IniReadSection("config/data.ini", "CurrentStats")
-;~ 	GUICtrlSetData($Edit2, $CurrentStats[1][1] & " / " & $InventorySettings[1][1] + $InventorySettings[2][1] & " (" & $InventorySettings[2][1] & ")", "")
-	GUICtrlSetData($Edit2, $CurrentStats[1][1] & " / " & $InventorySettings[1][1] - $InventorySettings[2][1] & " (" & $InventorySettings[1][1]& " - " &$InventorySettings[2][1] & ")", "")
-	GUICtrlSetData($Edit1, "Please equip a fishing rod. Then start.", "")
-
-	; Credits
-	Local $data = "" & @CRLF & @CRLF
-	$data &= "This project is specifically made for the english Black Desert EU/NA client." & @CRLF & @CRLF
-	$data &= "Requirements are 1920x1080 Windowed Fullscreen and the default font." & @CRLF & @CRLF
-	$data &= "" & @CRLF & @CRLF
-	$data &= ""
-	GUICtrlSetData($Credits, $data)
-
-	; Restock Settings
-	Local $RestockSettings = IniReadSection("config/data.ini", "RestockSettings")
-	GUICtrlSetState($CBRestock, CBT($RestockSettings[1][1])) ; Enable Auto-Restock
-	If $RestockSettings[2][1] = 0 Then ; Select Horse or Boat
-		GUICtrlSetState($RHorse, 1)
-	Else
-		GUICtrlSetState($RBoat, 1)
-	EndIf
-	GUICtrlSetState($CBSell, CBT($RestockSettings[3][1])) ; Trade Fish
-	GUICtrlSetData($ISell, $RestockSettings[4][1])
-	GUICtrlSetState($CBRepair, CBT($RestockSettings[5][1])) ; Repair Inventory
-	GUICtrlSetData($IRepair, $RestockSettings[6][1])
-	GUICtrlSetState($CBBroker, CBT($RestockSettings[7][1])) ; Auction Relics
-	GUICtrlSetData($IBroker, $RestockSettings[8][1])
-	GUICtrlSetState($CBBank, CBT($RestockSettings[9][1])) ; Store Relics/Money
-	GUICtrlSetData($IBank, $RestockSettings[10][1])
-
-	; WorkerSettings
-	Local $WorkerSettings = IniReadSection("config/data.ini", "WorkerSettings")
-	GUICtrlSetState($CBWorker, CBT($WorkerSettings[1][1]))
-EndFunc   ;==>InitGUI
-
-Func StoreGUI()
-
-	; Loot Settings
-	Local $LootSettings = IniReadSection("config/data.ini", "LootSettings")
-	Switch GUICtrlRead($CRarity)
-		Case "White"
-			$LootSettings[1][1] = 0
-		Case "Green"
-			$LootSettings[1][1] = 1
-		Case "Blue"
-			$LootSettings[1][1] = 2
-		Case "Gold"
-			$LootSettings[1][1] = 3
-		Case "Specials Only"
-			$LootSettings[1][1] = 4
-	EndSwitch
-	$LootSettings[2][1] = CBT(GUICtrlRead($CBSpecial1))
-	$LootSettings[3][1] = CBT(GUICtrlRead($CBSpecial2))
-	$LootSettings[4][1] = CBT(GUICtrlRead($CBSpecial3))
-	IniWriteSection("config/data.ini", "LootSettings", $LootSettings)
-
-	; Inventory Settings
-	Local $InventorySettings = IniReadSection("config/data.ini", "InventorySettings")
-	$InventorySettings[1][1] = Int(GUICtrlRead($Input1))
-	$InventorySettings[2][1] = Int(GUICtrlRead($Input2))
-	$InventorySettings[3][1] = CBT(GUICtrlRead($Checkbox1)) ; Discard Rods
-	IniWriteSection("config/data.ini", "InventorySettings", $InventorySettings)
-
-	; Food Settings
-	Local $FoodSettings = IniReadSection("config/data.ini", "FoodSettings")
-	$FoodSettings[1][1] = CBT(GUICtrlRead($Checkbox2))
-	$FoodSettings[2][1] = GUICtrlRead($Combo1)
-	$FoodSettings[3][1] = GUICtrlRead($Input3)
-	IniWriteSection("config/data.ini", "FoodSettings", $FoodSettings)
-
-	; Restock Settings
-	Local $RestockSettings = IniReadSection("config/data.ini", "RestockSettings")
-	$RestockSettings[1][1] = CBT(GUICtrlRead($CBRestock))
-	If GUICtrlRead($RHorse) = 1 Then
-		$RestockSettings[2][1] = 0
-	Else
-		$RestockSettings[2][1] = 1
-	EndIf
-	$RestockSettings[3][1] = CBT(GUICtrlRead($CBSell))
-	$RestockSettings[4][1] = GUICtrlRead($ISell)
-	$RestockSettings[5][1] = CBT(GUICtrlRead($CBRepair))
-	$RestockSettings[6][1] = GUICtrlRead($IRepair)
-	$RestockSettings[7][1] = CBT(GUICtrlRead($CBBroker))
-	$RestockSettings[8][1] = GUICtrlRead($IBroker)
-	$RestockSettings[9][1] = CBT(GUICtrlRead($CBBank))
-	$RestockSettings[10][1] = GUICtrlRead($IBank)
-	IniWriteSection("config/data.ini", "RestockSettings", $RestockSettings)
-
-	; Worker Settings
-	Local $WorkerSettings = IniReadSection("config/data.ini", "WorkerSettings")
-	$WorkerSettings[1][1] = CBT(GUICtrlRead($CBWorker))
-	IniWriteSection("config/data.ini", "WorkerSettings", $WorkerSettings)
-
-	InitGUI()
-EndFunc   ;==>StoreGUI
-
 Func Fish()
 	$Fish = Not $Fish
 	If $Fish = False Then
 		SetGUIStatus("Pausing.")
 	Else
-		SetGUIStatus("Starting.")
+		SetGUIStatus("Starting and hiding cursor.")
+		If Int(IniRead("config/data.ini", "InventorySettings","AutoDetectEmpty", 0)) Then
+			$freedetectedslots = DetectFreeInventory()
+			SetGUIInventory(0, $freedetectedslots)
+		Else
+			OCInventory(True)
+			OCInventory(False)
+		EndIf
 	EndIf
 EndFunc   ;==>Fish
-
-Func GUILoopSwitch()
-	Switch GUIGetMsg()
-		Case $GUI_EVENT_CLOSE
-			Exit
-		Case $Button3 ;Save
-			StoreGUI()
-		Case $Button2
-			ResetSession()
-		Case $Button1
-			Fish()
-		Case $ButtonClear
-			ClearInv()
-		Case $BSave
-			StoreGUI()
-		Case $BTestRestock
-			Restock()
-	EndSwitch
-EndFunc   ;==>GUILoopSwitch
 
 Func OCInventory($open = True)
 	Local Const $InventoryRegion = [1095, 226, 1919, 855]
@@ -748,13 +932,14 @@ Func Cast()
 	If Buff($Bufftimer) = True Then $Bufftimer = TimerInit()
 	If FeedWorker($FeedWorkertimer) = True Then $FeedWorkertimer = TimerInit()
 
+	SetGUIStatus("Casting Fishingrod")
 	Sleep(1000)
 	CoSe("{SPACE}")
 
 	$timer = TimerInit()
 	While DetectState($C) = False And $Fish
 		Sleep(500)
-		If TimerDiff($timer) / 1000 >= 12 Then Return False
+		If TimerDiff($timer) / 1000 >= 8 Then Return False
 	WEnd
 	Return True
 EndFunc   ;==>Cast
@@ -772,6 +957,8 @@ EndFunc   ;==>CheckClientResolution
 Func UnequipRod()
 	Local Const $WeaponRegion = [1200, 584, 1250, 628]
 	Local $SRx, $SRy, $IS = False
+	SetGUIStatus("Unequipping fishingrod")
+	OCInventory(False)
 	OCInventory(True)
 	MouseClick("right", 1225, 600)
 	OCInventory(False)
@@ -790,7 +977,7 @@ Func TrackNPC($npcname)
 		CoSe("{LCTRL}")
 		Sleep(250)
 		MouseClick("left", $NPCSearchIcon[0], $NPCSearchIcon[1])
-		Sleep(250)
+		Sleep(500)
 
 		$IS = _ImageSearchArea($NPCs[1], 1, 1175, 50, 1600, 676, $x, $y, 50, 0)
 		If $IS = True Then
@@ -831,7 +1018,7 @@ Func NearbyNPC($npc_type) ; 0 = bank, 1 = repair, 2 = trader, 3 = broker
 		CoSe("{LCTRL}")
 		Sleep(250)
 		MouseClick("left", $NPCSearchIcon[0], $NPCSearchIcon[1])
-		Sleep(250)
+		Sleep(500)
 
 		$IS = _ImageSearchArea($NPCs[$npc_type], 1, 1175, 50, 1600, 676, $x, $y, 50, 0)
 		If $IS = True Then
@@ -853,6 +1040,7 @@ Func NearbyNPC($npc_type) ; 0 = bank, 1 = repair, 2 = trader, 3 = broker
 			Return True
 		Else
 			$counter -= 1
+			Sleep(500)
 			If $counter <= 0 Then Return False
 		EndIf
 	WEnd
@@ -863,9 +1051,11 @@ Func MapMovement()
 	Local $FF[6][2]
 	Local $dif = 0, $SSN = 1
 	Local $timer = TimerInit()
+	Local $timeout = 240
 
 	SetGUIStatus("Autopathing...")
-	While TimerDiff($timer) / 1000 <= 180 And $Fish
+	While TimerDiff($timer) / 1000 <= $timeout And $Fish
+		SetGUIStatus("Autopathing... timeout in (" & $timeout - Round(TimerDiff($timer) / 1000, 0) & "s")
 		Sleep(250)
 		FFSnapShot($MapRegion[0], $MapRegion[1], $MapRegion[2], $MapRegion[3], $SSN)
 		For $i = 0 To UBound($FF) - 1 Step 1
@@ -887,7 +1077,7 @@ Func MapMovement()
 			Sleep(1000)
 		EndIf
 	WEnd
-	ConsoleWrite("MapMovement failed.")
+	SetGUIStatus("Autopathing failed")
 	Return False
 EndFunc   ;==>MapMovement
 
@@ -1063,41 +1253,72 @@ EndFunc   ;==>BackToMount
 
 Func Restock()
 	Local $RestockSettings = IniReadSection("config/data.ini", "RestockSettings")
-
 	If $RestockSettings[1][1] = 0 Then Return False
 	SetGUIStatus("Restocking...")
 	WinActivate("BLACK DESERT - ")
 	Sleep(500)
 	$Fish = True
 
+	For $Order = 1 To 4 Step 1
+		Switch $Order
+			Case Int($RestockSettings[11][1])
+				If $RestockSettings[3][1] Then ; Trader
+					SetGUIStatus("Selling Fish.")
+					If SellFish($RestockSettings[7][1]) Then
+						SetGUIInventory(0, $freedetectedslots)
+						SetGUIStatus("Selling successful")
+					Else
+						$Order -= 1
+						ContinueCase
+					EndIf
+				EndIf
+			Case Int($RestockSettings[12][1])
+				If $RestockSettings[4][1] Then ; Repair
+					SetGUIStatus("Repairing.")
+					If RepairInv($RestockSettings[8][1]) Then
+						SetGUIStatus("Repairing successful")
+					Else
+						$Order -= 1
+						ContinueCase
+					EndIf
+				EndIf
+			Case Int($RestockSettings[13][1])
+				If $RestockSettings[5][1] Then ; Auction
+					SetGUIStatus("Auctioning Relics.")
+					If BrokerRelics($RestockSettings[9][1]) Then
+						SetGUIStatus("Auctioning successful")
+					Else
+						$Order -= 1
+						ContinueCase
+					EndIf
+				EndIf
+			Case Int($RestockSettings[14][1])
+				If $RestockSettings[6][1] Then ; Bank
+					SetGUIStatus("Storing Relics & Money.")
+					If BankRelics($RestockSettings[10][1]) Then
+						SetGUIInventory(0, $freedetectedslots)
+						SetGUIStatus("Sotring successful")
+					Else
+						$Order -= 1
+						ContinueCase
+					EndIf
+				EndIf
+		EndSwitch
+	Next
 
-	If $RestockSettings[5][1] = 1 Then
-		SetGUIStatus("Repairing.")
-		RepairInv($RestockSettings[6][1])
-	EndIf ;Repair first
-	
-	If $RestockSettings[3][1] = 1 Then
-		SetGUIStatus("Selling Fish.")
-		If SellFish($RestockSettings[4][1]) = True Then SetGUIInventory(0)
-	EndIf
-
-	If $RestockSettings[7][1] = 1 Then
-		SetGUIStatus("Auctioning Relics.")
-		BrokerRelics($RestockSettings[6][1])
-	EndIf
-	If $RestockSettings[9][1] = 1 Then
-		SetGUIStatus("Storing Relics & Money.")
-		If BankRelics($RestockSettings[6][1]) = True Then SetGUIInventory(0)
-	EndIf
 	SetGUIStatus("Autopathing to mount.")
 	BackToMount($RestockSettings[2][1])
 	SetGUIStatus("Autopath to mount complete.")
+	SwapFishingrod()
+	$Fish = False
+	Fish()
 	Return True
 EndFunc   ;==>Restock
 
 Func Buff($timer)
 	Local $FoodSettings = IniReadSection("config/data.ini", "FoodSettings")
 	If $FoodSettings[1][1] = 1 And TimerDiff($timer) / 1000 / 60 > Int($FoodSettings[3][1]) Then
+		SetGUIStatus("Using Buff Food")
 		CoSe($FoodSettings[2][1])
 		Return True
 	EndIf
@@ -1106,7 +1327,7 @@ EndFunc   ;==>Buff
 
 Func FeedWorker($timer)
 	Local Const $FeedWorker[5][2] = [ _
-			[192, 84], _ ; Worker Icon
+			[211, 118], _ ; Worker Icon
 			[1489, 830], _ ; Recover All
 			[1224, 363], _ ; Select food
 			[1274, 489], _ ; Confirm
@@ -1114,6 +1335,7 @@ Func FeedWorker($timer)
 
 	Local $WorkerSettings = IniReadSection("config/data.ini", "WorkerSettings")
 	If $WorkerSettings[1][1] = 1 And TimerDiff($timer) / 1000 / 60 > Int($WorkerSettings[2][1]) Then
+		SetGUIStatus("Feeding Worker")
 		OCInventory(True)
 		For $i = 0 To UBound($FeedWorker) - 1 Step 1
 			Sleep(250)
@@ -1141,16 +1363,46 @@ Func ObfuscateTitle($length = 5)
 		Next
 	EndIf
 	$newtitle &= @HOUR & @MIN & @SEC
-	WinSetTitle("QQ", "", $newtitle)
+	WinSetTitle("CrayonCode", "", $newtitle)
 	Return True
 EndFunc   ;==>ObfuscateTitle
 
-Func DryFish()
+Func HandleDryFish($dryingenabled = 0)
+	Local $timer = TimerInit()
+	If $dryingenabled > 0 Then
+		SetGUIStatus("Drying enabled")
+		If TimerDiff($DryFishCooldownTimer) / 1000 / 60 < 5 Then
+			SetGUIStatus("Drying on Cooldown. " & Round(TimerDiff($DryFishCooldownTimer) / 1000 / 60, 1) & "m ago")
+			Return False
+		EndIf
+		For $i = 0 To 10
+			$DryFishCooldownTimer = TimerInit()
+			Switch DryFish()
+				Case -1 ; Processing failed
+					ExitLoop
+				Case 0 ; Wrong weather
+					While $Fish
+						SetGUIStatus("Waiting for clear weather to dry (" & Round(TimerDiff($timer) / 1000, 0) & "s)")
+						If DryFish() <> 0 Or TimerDiff($timer) / 1000 / 60 > 15 Then ExitLoop
+						Sleep(1000)
+					WEnd
+				Case 1 ; Completed one cycle
+					SetGUIStatus("Processing completed")
+				Case 2 ; No fish meets requirements
+					$freedetectedslots = DetectFreeInventory()
+					SetGUIInventory(0, $freedetectedslots)
+					Return $freedetectedslots
+			EndSwitch
+		Next
+		Return False
+	EndIf
+EndFunc   ;==>HandleDryFish
+
+Func DryFish($weatheronly = 0)
 	Local $DryingSettings = IniReadSection("config/data.ini", "DryingSettings")
-	If Not Int($DryingSettings[1][1]) Then Return 0
 	Local Const $weather[3] = [1636, 10, "res/weather_clear.bmp"]
 	Local Const $InvS[3] = [1528, 350, 48] ; X,Y,OFFSET
-	Local Const $processing[2] = ["res/reference_highlight.bmp", "res/processing_check.bmp"]
+	Local Const $processing[3] = ["res/reference_highlight.bmp", "res/processing_check.bmp", "res/processing_activity.bmp"]
 	Local Const $Rarity[4] = ["", 7184194, 6596799, 13742692] ; Green, Blue, Gold
 	Local Const $DryFish[5][2] = [ _
 			[843, 683], _ ; Dry Fish
@@ -1159,15 +1411,26 @@ Func DryFish()
 
 	Local $IS, $x, $y, $FF, $SSN = 1
 	Local $timer = TimerInit()
+	Local $detectedrarity = 0
+	Local $FFmean[3]
 
-	SetGUIStatus("Drying fish")
 
 	$IS = _ImageSearchArea($weather[2], 1, $weather[0] - 8, $weather[1] - 8, $weather[0] + 8, $weather[1] + 8, $x, $y, 50, 0)
 	If $IS = True Then
-		UnequipRod()
-		CoSe("d")
-		CoSe("a")
-		CoSe("l")
+		SetGUIStatus("Drying fish")
+;~ 		CoSe("d")
+;~ 		CoSe("a")
+		$IS = _ImageSearchArea($processing[2], 1, 0, 0, 1920, 1080, $x, $y, 50, 0)
+		If Not $IS Then
+			CoSe("l")
+		Else
+			CoSe("{LCTRL}")
+		EndIf
+		$IS = _ImageSearchArea($processing[2], 1, 0, 0, 1920, 1080, $x, $y, 50, 0)
+		If Not $IS Then
+			UnequipRod()
+			CoSe("l")
+		EndIf
 		Sleep(250)
 		MouseClick("left", $DryFish[0][0], $DryFish[0][1])
 		Sleep(500)
@@ -1175,18 +1438,25 @@ Func DryFish()
 			If MouseGetPos(0) >= $InvS[0] And MouseGetPos(0) <= $InvS[0] + 500 And MouseGetPos(1) >= $InvS[1] And MouseGetPos(1) <= $InvS[1] + 500 Then MouseMove($InvS[0] - 50, $InvS[1]) ; Keep mouse out of detection range
 			For $j = 0 To 7 Step 1
 				For $i = 0 To 7 Step 1
-					$IS = _ImageSearchArea($processing[0], 0, $InvS[0] - 24 + $i * $InvS[2], $InvS[1] - 24 + $j * $InvS[2], $InvS[0] + 24 + $i * $InvS[2], $InvS[1] + 24 + $j * $InvS[2], $x, $y, 55, 0)
-					If $IS = True Then
-						ConsoleWrite(@CRLF & "found a fish to dry ")
+					$IS = _ImageSearchArea($processing[0], 0, $InvS[0] - 24 + $i * $InvS[2], $InvS[1] - 24 + $j * $InvS[2], $InvS[0] + 24 + $i * $InvS[2], $InvS[1] + 24 + $j * $InvS[2], $x, $y, 60, 0)
+;~ 					FFSnapShot($InvS[0] - 24 + $i * $InvS[2], $InvS[1] - 24 + $j * $InvS[2], $InvS[0] + 24 + $i * $InvS[2], $InvS[1] + 24 + $j * $InvS[2], $SSN)
+;~ 					$FFmean = FFComputeMeanValues($SSN)
+;~ 					If $IS = True Or ($FFmean[0] + $FFmean[1] + $FFmean[2]) > 300 Then
+					If $IS Then
+						SetGUIStatus("dryable fish [" & $j & $i & "]")
 						For $k = $DryingSettings[2][1] To UBound($Rarity) - 1 Step 1
-							$FF = FFColorCount($Rarity[$k], 20, True, $InvS[0] - 20 + $i * $InvS[2], $InvS[1] - 15 + $j * $InvS[2], $InvS[0] - 19 + $i * $InvS[2], $InvS[1] + 15 + $j * $InvS[2], $SSN)
+							$FF = FFColorCount($Rarity[$k], 18, True, $InvS[0] - 20 + $i * $InvS[2], $InvS[1] - 15 + $j * $InvS[2], $InvS[0] - 19 + $i * $InvS[2], $InvS[1] + 15 + $j * $InvS[2], $SSN)
 							If $FF > 10 Then
+								$detectedrarity = $k
+								SetGUIStatus("Rarity detected: " & $k & " Filter: " & $DryingSettings[2][1])
 								If $k > Int($DryingSettings[2][1]) Then
-									ConsoleWrite("DID NOT DRY BECAUSE" & $k & " > " & $DryingSettings[2][1])
-									ExitLoop(2)
+									SetGUIStatus("Rarity too high")
+									ExitLoop (2)
 								EndIf
 							EndIf
 						Next
+						If $detectedrarity = 0 Then SetGUIStatus("Rarity detected: " & $detectedrarity & " Filter: " & $DryingSettings[2][1])
+						SetGUIStatus("Select fish.")
 						Sleep(250)
 						MouseClick("right", $InvS[0] + $i * $InvS[2], $InvS[1] + $j * $InvS[2], 2)
 						Sleep(250)
@@ -1197,8 +1467,15 @@ Func DryFish()
 						Sleep(100)
 						If $IS = True Then CoSe("{SPACE}")
 						Sleep(100)
-						ProductionActivityCheck()
+						SetGUIStatus("Waiting for drying process to end")
+						If Not ProductionActivityCheck() Then
+							SetGUIStatus("Processing failed")
+							Return -1
+						EndIf
+						SetGUIStatus("Processing stopped")
 						Return 1
+					Else
+						SetGUIStatus("not dryable [" & $j & $i & "]")
 					EndIf
 				Next
 			Next
@@ -1211,8 +1488,6 @@ Func DryFish()
 		Next
 		Return 2
 	Else
-		SetGUIStatus("Wrong Weather")
-		ConsoleWrite("WRONG WEATHER")
 		Return 0
 	EndIf
 EndFunc   ;==>DryFish
@@ -1220,13 +1495,17 @@ EndFunc   ;==>DryFish
 Func ProductionActivityCheck()
 	Local Const $processing = "res/processing_activity.bmp"
 	Local $IS, $x, $y
-	Sleep(500)
-	While True
-		CoSe("l") ; reopen incase of interupt
-		Sleep(500)
+	Sleep(2000)
+	$IS = _ImageSearchArea($processing, 1, 0, 0, 1920, 1080, $x, $y, 50, 0)
+	If $IS = True Then Return False
+	While $Fish
 		$IS = _ImageSearchArea($processing, 1, 0, 0, 1920, 1080, $x, $y, 50, 0)
 		If $IS = True Then Return True
+		CoSe("l") ; reopen incase of interupt
 		Sleep(1500)
+		$IS = _ImageSearchArea($processing, 1, 0, 0, 1920, 1080, $x, $y, 50, 0)
+		If $IS = True Then Return True
+		Sleep(6500)
 	WEnd
 	Return False
 EndFunc   ;==>ProductionActivityCheck
@@ -1256,20 +1535,24 @@ Func DetectFreeInventory()
 	Next
 	OCInventory(False)
 	SetGUIStatus($Free & " empty slots")
-	Return($Free)
+	Return ($Free)
+EndFunc   ;==>DetectFreeInventory
+
+Func Turn()
+	MouseMove(MouseGetPos(0) + 500, MouseGetPos(1))
+	Cose("ad")
 EndFunc
 
 Func Main()
 	ObfuscateTitle()
-	Local $InventorySettings[3] = [Int(IniRead("config/data.ini", "InventorySettings", "FreeSlots", 16)), Int(IniRead("config/data.ini", "InventorySettings", "ReservedSlots", 8)), Int(IniRead("config/data.ini", "InventorySettings", "DiscardRods", 0))]
+	Local $InventorySettings = IniReadSection("config/data.ini", "InventorySettings")
 	$DryingSettings = IniReadSection("config/data.ini", "DryingSettings")
 	Global $PickedLoot = Int(IniRead("config/data.ini", "CurrentStats", "PickedLoot", 0))
 	Global $SwappedRods = 0
-	Local $fishingtimer = 0, $dryingtimeout = 0
-	Local $freedetectedslots = 0
-	Local $Reserved = False
+	Local $fishingtimer = 0, $dryingtime = 0, $dryingtimeout = 0, $failedcasts = 0
 	Local $CorrectRes = False
 	Local $ScreenSaver = TimerInit()
+	Local $HandleDryFish
 	$Fish = False
 	InitGUI()
 
@@ -1296,38 +1579,19 @@ Func Main()
 
 						$PickedLoot = HandleLoot()
 
-						$InventorySettings[0] = Int(IniRead("config/data.ini", "InventorySettings", "FreeSlots", 16))
-						If $freedetectedslots > 0 Then $InventorySettings[0] = $freedetectedslots
-						$InventorySettings[1] = Int(IniRead("config/data.ini", "InventorySettings", "ReservedSlots", 8))
-						$InventorySettings[2] = Int(IniRead("config/data.ini", "InventorySettings", "DiscardRods", 0))
+						$InventorySettings = IniReadSection("config/data.ini", "InventorySettings")
+						If $freedetectedslots > 0 Then $InventorySettings[1][1] = $freedetectedslots
 						SetGUIInventory($PickedLoot, $freedetectedslots)
-						If $InventorySettings[0] - $InventorySettings[1] - $PickedLoot <= 0 Then
-							If $InventorySettings[1] > 0 Then
-								$Reserved = True
-								$DryingSettings = IniReadSection("config/data.ini", "DryingSettings")
-								If Int($DryingSettings[1][1]) And TimerDiff($dryingtimeout)/1000/60 > 10 Then
-									For $i = 0 To 6
-										Switch DryFish()
-											Case 0 ; Wrong weather
-												$dryingtimeout = TimerInit()
-												ExitLoop
-											Case 1 ; Completed one cycle
-												$dryingtimeout = TimerInit()
-											Case 2 ; No fish meets requirements
-												$freedetectedslots = DetectFreeInventory()
-												$dryingtimeout = TimerInit()
-												SetGUIInventory($PickedLoot, $freedetectedslots)
-												ExitLoop
-										EndSwitch
-									Next
-								EndIf
-							EndIf
-							If $InventorySettings[0] + $InventorySettings[1] - $PickedLoot <= 0 Then
-								SetGUIStatus("Inventory full. Stopping.")
-								$Fish = False
-								If IniRead("config/data.ini", "RestockSettings", "EnableRestock", 0) Then Restock() ; EXPERIMENTAL
-								ExitLoop
-							EndIf
+
+						If $InventorySettings[1][1] - $InventorySettings[2][1] - $PickedLoot <= 0 Then ; Limit
+							SetGUIStatus("Limit reached. Stopping.")
+							$Fish = False
+							If IniRead("config/data.ini", "RestockSettings", "EnableRestock", 0) Then Restock() ; EXPERIMENTAL
+							ExitLoop
+						EndIf
+						If $InventorySettings[1][1] - $InventorySettings[2][1] - 2 - $PickedLoot <= 0 Then ; Limit - 2
+							$HandleDryFish = HandleDryFish(Int($DryingSettings[1][1]))
+							If $HandleDryFish > 0 Then $freedetectedslots = $HandleDryFish
 						EndIf
 					EndIf
 				Case 20 ; You are currently fishing. Please wait until you feel a bite.
@@ -1346,10 +1610,17 @@ Func Main()
 					$Breaktimer = 0
 					SetGUIStatus("Ready for fishing.")
 					If Cast() = False Then
-						SetGUIStatus("Cast failed. Inspecting equipped fishingrod.")
+						$failedcasts += 1
+						If $failedcasts >= 12 Then
+							SetGUIStatus("Too many failed casts. Stopping.")
+							$Fish = False
+							If IniRead("config/data.ini", "RestockSettings", "EnableRestock", 0) Then Restock() ; EXPERIMENTAL
+							ExitLoop
+						EndIf
+						SetGUIStatus("Cast failed(" & $failedcasts & "). Inspecting equipped fishingrod.")
 						If InspectFishingrod() = True Then
 							SetGUIStatus("Swapping fishingrods.")
-							If SwapFishingrod($InventorySettings[2]) = True Then
+							If SwapFishingrod($InventorySettings[3][1]) = True Then
 								$SwappedRods += 1
 							Else
 								SetGUIStatus("No fishingrods found. Stopping.")
@@ -1357,13 +1628,18 @@ Func Main()
 								If IniRead("config/data.ini", "RestockSettings", "EnableRestock", 0) Then Restock() ; EXPERIMENTAL
 								ExitLoop
 							EndIf
+						Else
+							SetGUIStatus("Fishingrod ok. Maybe turn around?")
+							Turn()
 						EndIf
+					Else
+						$failedcasts = 0
 					EndIf
 					$fishingtimer = TimerInit()
 				Case Else
-					SetGUIStatus("Unidentified state.")
 					If $Breaktimer = 0 Then
 						$Breaktimer = TimerInit()
+						SetGUIStatus("Unidentified state")
 					ElseIf TimerDiff($Breaktimer) / 1000 > 10 Then
 						SetGUIStatus("Unidentified state. Trying to equip fishingrod.")
 						If SwapFishingrod() = False Then
@@ -1373,6 +1649,8 @@ Func Main()
 						Else
 							Sleep(3000)
 						EndIf
+					Else
+						SetGUIStatus("Unidentified state (" & Round(TimerDiff($Breaktimer) / 1000,0) & "s)")
 					EndIf
 			EndSwitch
 			Sleep(100)
@@ -1387,7 +1665,4 @@ EndFunc   ;==>Main
 
 
 Main()
-
-
-
 
