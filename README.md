@@ -5,7 +5,5 @@ Working as of: April 12, 2017
 Run: CrayonCode.au3 to start the bot  
 **Requirements**  
 * 1920x1080  
-
 * Full window mode
-
 * Do not minimize game client
