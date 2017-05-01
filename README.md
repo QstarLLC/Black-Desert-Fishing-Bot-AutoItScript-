@@ -15,4 +15,4 @@ Edit the CrayonCode.au3 to match with your screen settings.
 
 
 **Liked the work? Buy me a coffee!**  
-https://www.paypal.me/MakroteK
+https://www.paypal.me/QStarMacroLLC
