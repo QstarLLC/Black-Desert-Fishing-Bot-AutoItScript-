@@ -11,4 +11,8 @@ Run: CrayonCode.au3 to start the bot
 
 **Start CrayonCode.au3**  
 If Feeding Worker not working, its probably the Coordinates doesnt match.  
-Edit the CrayonCode.au3 to match with your screen settings.
+Edit the CrayonCode.au3 to match with your screen settings.  
+
+
+**Liked the worked? Buy me a coffee!**  
+https://www.paypal.me/MakroteK
