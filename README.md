@@ -14,5 +14,5 @@ If Feeding Worker not working, its probably the Coordinates doesnt match.
 Edit the CrayonCode.au3 to match with your screen settings.  
 
 
-**Liked the worked? Buy me a coffee!**  
+**Liked the work? Buy me a coffee!**  
 https://www.paypal.me/MakroteK
